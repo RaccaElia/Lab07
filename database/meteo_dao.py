@@ -1,7 +1,6 @@
 from database.DB_connect import DBConnect
 from model.situazione import Situazione
 
-
 class MeteoDao():
 
     @staticmethod
