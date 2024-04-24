@@ -45,7 +45,7 @@ class Model:
     def calcolaSequenza(self, mese):
         self.sequenza = []
         self.costoBest = 7000
-        self.ricorsioneSequenza([], mese)
+        self.ricorsioneSequenza(self.sequenza, mese)
         return self.sequenza, self.costoBest
 
     def ricorsioneSequenza(self, situazioni, mese):
@@ -53,7 +53,7 @@ class Model:
             costo = self.controllaCosto(situazioni)
             if costo < self.costoBest:
                 self.costoBest = costo
-            self.sequenza = copy.deepcopy(situazioni)
+                self.sequenza = copy.deepcopy(situazioni)
         else:
             for situa in self.get_situa_succ(0 if situazioni == [] else int(situazioni[-1].data.strftime("%d")), mese):
                 situazioni.append(situa)
@@ -72,10 +72,31 @@ class Model:
         return costo
 
     def soddisfaVincoli(self, seq):
-        flag = True
+        cnT = 0
+        cnG = 0
+        cnM = 0
+        print("inizio for")
         for i in range(len(seq)):
-            if i == 0 or i == 1:
+
+            if seq[i].localita == "Torino":
+                print("Torin")
+                cnT += 1
+            elif seq[i].localita == "Genova":
+                print("genov")
+                cnG += 1
+            elif seq[i].localita == "Milano":
+                print("milan")
+                cnM += 1
+
+            if i == 0 or i == 1 or i == 2:
                 pass
-            elif seq[i].localita != seq[i - 1].localita or seq[i].localita != seq[i - 2].localita:
-                flag = False
-        return flag
+            elif seq[i].localita != seq[i - 1].localita and (seq[i - 1].localita != seq[i - 2].localita or seq[i - 1].localita != seq[i - 3].localita):
+                print("non va 3")
+                return False
+
+        if cnT > 6 or cnG > 6 or cnM > 6:
+            print("piu di 6")
+            return False
+
+        print(f"return true, lunghezza: {len(seq)}")
+        return True
